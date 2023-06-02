@@ -1,13 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
+import photogate as pt
+
+distancia = 7
+arquivo = r'C:\Users\User\OneDrive - Etec Centro Paula Souza\Desktop\Arquivos photogata\Photogate\Computação\tempos.CSV'
+voltas = pt.leitura_arquivo(arquivo)
+voltas = pt.calculo_acrescimos(voltas)
+voltas = pt.calculo_velocidades(distancia, voltas)
 
 # Dados de exemplo
 dados = [
-    {'Volta': 1, 'Tempo': 10.5, 'Acréscimo': 0.2, 'Vel. Inst': 50},
-    {'Volta': 2, 'Tempo': 9.8, 'Acréscimo': 0.3, 'Vel. Inst': 55},
-    {'Volta': 3, 'Tempo': 11.2, 'Acréscimo': 0.1, 'Vel. Inst': 48},
-    {'Volta': 4, 'Tempo': 10.1, 'Acréscimo': 0.5, 'Vel. Inst': 52},
-    {'Volta': 5, 'Tempo': 9.5, 'Acréscimo': 0.2, 'Vel. Inst': 54},
+        {'Volta': x[0], 'Tempo':x[1], 'Acréscimo':x[2], 'Vel. Inst':[3]} for x in voltas
 ]
 
 # Função para ordenar os dados por tempo de forma ascendente ou descendente
@@ -29,11 +32,13 @@ janela = tk.Tk()
 janela.title("Minha Interface")
 largura_pagina = janela.winfo_screenwidth()  # Largura da página
 altura_pagina = janela.winfo_screenheight()  # Altura da página
-
+janela.tk.call('lappend', 'auto_path', r'C:\Users\User\Downloads\awthemes-10.4.0')
+janela.tk.call('package', 'require', 'awdark')
 # Configuração do tema escuro
 janela.configure(bg='black')
 style = ttk.Style(janela)
-style.theme_use('clam')
+print(style.theme_names())
+style.theme_use('awdark')
 # Configuração da tabela
 colunas = ('Volta', 'Tempo', 'Acréscimo', 'Vel. Inst')
 tabela = ttk.Treeview(janela, columns=colunas, show='headings')
