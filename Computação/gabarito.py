@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 import photogate as pt
 
+
+#Pegando os dados
 distancia = 7
 arquivo = r'C:\Users\User\OneDrive - Etec Centro Paula Souza\Desktop\Arquivos photogata\Photogate\Computação\tempos.CSV'
 voltas = pt.leitura_arquivo(arquivo)
@@ -41,10 +43,10 @@ print(style.theme_names())
 style.theme_use('awdark')
 # Configuração da tabela
 colunas = ('Volta', 'Tempo', 'Acréscimo', 'Vel. Inst')
-tabela = ttk.Treeview(janela, columns=colunas, show='headings')
+tabela = ttk.Treeview(janela, columns=colunas, show='headings', )
 for coluna in colunas:
     tabela.heading(coluna, text=coluna)
-tabela.pack(padx=10, pady=10, expand=True, fill=tk.BOTH)
+tabela.pack(padx=0, pady=0, expand=False, anchor='n', side= 'left')
 
 # Preencher a tabela com os dados iniciais
 atualizar_tabela(dados)
@@ -61,5 +63,6 @@ tabela.column('#0', width=largura_tabela, stretch=tk.NO)
 for coluna in colunas:
     tabela.column(coluna, width=int(largura_tabela / len(colunas)), stretch=tk.NO)
 
+# Configurando Grade
 # Execução da interface
 janela.mainloop()
