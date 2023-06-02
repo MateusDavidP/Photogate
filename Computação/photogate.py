@@ -5,7 +5,7 @@ def leitura_arquivo(nome_arquivo: str) -> list:
     voltas = []
 
     for linha in arquivo:
-        dados = linha.split()
+        dados = linha.split(';')
         voltas.append([dados[0], float(dados[1])])
 
     return voltas
@@ -24,6 +24,7 @@ def calculo_velocidades(distancia: float, voltas: list) -> list:
     
     for volta in voltas:
         velocidade = distancia / volta[1]
+        velocidade = round(velocidade, 2)
         volta.append(velocidade)
 
     return voltas
@@ -44,7 +45,8 @@ def main():
 
 #problema: forma como será o output dos dados
 
-main()
+if __name__ == "__main__":
+    main()
 
 
 
