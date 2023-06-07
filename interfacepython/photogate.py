@@ -18,17 +18,17 @@ def calculo_velocidades(distancia: float, voltas: list) -> list:
     return voltas
 
 def leitura_arquivo(nome_arquivo: str, tmn: float) -> list:
-    arquivo = open(nome_arquivo)
+    with open('192.168.137.217.html', 'r') as arquivo:
+        conteudo = arquivo.read()
 
-    voltas = []
+    # Processando os dados
+    linhas = conteudo.strip().split('<body>')
+    linhas = linhas[1]
+    linhas = linhas.split('<br>')
 
-    for linha in arquivo:
-        dados = linha.split(';')
-        voltas.append([int(dados[0]), float(dados[1])])
-    voltas = calculo_acrescimos(voltas)
-    voltas = calculo_velocidades(tmn, voltas)
-    arquivo.close()
-    return voltas
+    dados = [linha.split(',') for linha in linhas]
+
+    return dados
    
 
 
