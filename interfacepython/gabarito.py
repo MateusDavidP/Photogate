@@ -4,8 +4,9 @@ from tkinter import ttk
 from tkinter import filedialog, simpledialog
 import photogate as pt
 from altera_arquivo import alterar_wifi
+from PIL import ImageTk, Image
 
-# variaveis
+
 
 
 # region Janela de dialogo
@@ -71,7 +72,7 @@ def open_dialog(janela):
 # endregion
 
 
-# Função para atualizar a tabela com os novos dados
+#region Função para atualizar a tabela com os novos dados
 
 
 def atualizar_tabela(dados: list[dict[str, int]], tabela: ttk.Treeview):
@@ -202,11 +203,11 @@ def main():
         r'C:\Users\User\Downloads\Comptu\Computação\Azure-ttk-theme-main\azure.tcl')
     janela.tk.call("set_theme", "dark")
 
-    janela.columnconfigure(0, weight=6)
+    janela.columnconfigure(0, weight=8, minsize= 720)
     janela.columnconfigure(1, weight=4)
-    janela.rowconfigure(0, weight=1)
-    janela.rowconfigure(1, weight=1)
-    janela.rowconfigure(2, weight=3)
+    janela.rowconfigure(0, weight=4,  minsize = 300)
+    janela.rowconfigure(1, weight=3)
+    #janela.rowconfigure(2, weight=1)
 
     entrada_var = tk.StringVar()
     arquivosel = tk.StringVar()
@@ -304,10 +305,19 @@ def main():
         command=lambda: open_dialog(janela))
     button.pack(pady=10, anchor='center', side='top', after=montartabel)
 
-    widget_verde = tk.Frame(janela, bg="green")
-    widget_verde.grid(row=2, column=1, sticky="nsew")
+    #endregion
 
-    # endregion
+    #region Imagem do raio
+    imagem = Image.open(r"raiov2 - Copia.png")
+    imagem = imagem.resize((400, 400))  # Redimensiona a imagem conforme necessário
+    imagem_tk = ImageTk.PhotoImage(imagem)
+
+    katchau = ttk.Label(janela, image= imagem_tk, anchor= 'n')
+    katchau.grid(row=1, column=1, sticky= 'new')
+
+    #endregion
+
+    
 
     # region Configurando onde serão inseridos as configurações
     error_label = tk.Label(janela, text="", fg="red")
