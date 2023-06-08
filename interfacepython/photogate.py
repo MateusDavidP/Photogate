@@ -11,24 +11,26 @@ def calculo_acrescimos(voltas: list) -> list:
 def calculo_velocidades(distancia: float, voltas: list) -> list:
     
     for volta in voltas:
-        velocidade = distancia / volta[1]
-        velocidade = round(velocidade, 2)
+        velocidade = distancia / volta[2]
+        velocidade = round(velocidade, 3)
         volta.append(velocidade)
 
     return voltas
 
-def leitura_arquivo(nome_arquivo: str, tmn: float) -> list:
-    with open('192.168.137.217.html', 'r') as arquivo:
+def leitura_arquivo(nome_arquivo: str) -> list:
+    with open(nome_arquivo, 'r') as arquivo:
         conteudo = arquivo.read()
 
     # Processando os dados
     linhas = conteudo.strip().split('<body>')
     linhas = linhas[1]
     linhas = linhas.split('<br>')
-
-    dados = [linha.split(',') for linha in linhas]
-
-    return dados
+    linhas = [linha.split(',') for linha in linhas]
+    linhas = linhas[1:len(linhas)-1]
+    for x in range(len(linhas)):
+        for y in [1,2]:
+            linhas[x][y] = round(int(linhas[x][y])/1000, 3)
+    return linhas
    
 
 

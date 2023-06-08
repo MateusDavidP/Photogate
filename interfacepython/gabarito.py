@@ -1,4 +1,5 @@
 import tkinter as tk
+from ttkwidgets import FloatEntry
 from tkinter import ttk
 from tkinter import filedialog, simpledialog
 import photogate as pt
@@ -69,31 +70,9 @@ def open_dialog(janela):
 # endregion
 
 
-def validar_numero(entry_var, error_label):
-    novo_valor = entry_var.get()
-
-    if novo_valor.isdigit() or novo_valor == '':
-        error_label.config(text="")
-        return True
-    else:
-        error_label.config(text="* Digite apenas números", fg="red")
-        return False
 
 
-def enable_button():
-    if bota and arquivosel:
-        montartabela.config(state="enabled")
-    else:
-        montartabela.config(state="disabled")
 
-
-def entry_modified(e, event):
-    if e.get() != '0' and e.get():
-        bota = True
-    validar_numero(entrada_var, error_label)
-    enable_button()
-
-# region função de atualizar tabela
 # Função para atualizar a tabela com os novos dados
 
 
@@ -136,17 +115,46 @@ def abrir_arquivos():
     global dados
     global voltas
     filepaths = filedialog.askopenfilename(
-        filetypes=[("Arquivos CSV", "*.csv")])
+        filetypes=[("Arquivos HTML", "*.html")])
+    arquivosel.set(filepaths)
     # !!! adionar função de pegar tmn
-    voltas = pt.leitura_arquivo(filepaths, 7.0)
+    try:
+        distancia =  float(entrada_var.get())
+    except ValueError:
+        error_label.configure(text='Insira o tamanho')
+        pass
+    rebeci = pt.leitura_arquivo(filepaths)
+    calculado = pt.calculo_acrescimos(rebeci)
+    calculado = pt.calculo_velocidades(distancia, calculado)
     dados = [
-        {'Volta': x[0], 'Tempo':x[1], 'Acréscimo':x[2], 'Vel. Inst':[3]} for x in voltas
+        {'Volta': x[0], 'Tempo':x[1], 'Acréscimo':x[3], 'Vel. Inst':x[4]} for x in calculado
     ]
-    atualizar_tabela(dados, tabela)
-    enable_button()
+    
+    
 # endregion
 
 # region configurando cores alternadas na tabela
+
+def pega_valor(event, entry: ttk.Entry, error: ttk.Label):
+    valor = entry.get()
+    if len(valor) > 6:
+        error.configure(text='Apenas duas casas decimais')
+        return False
+    else:
+        if len(valor) == 3 and valor[2] != '.':
+            entry.insert(2, '.')
+        if not valor.isdigit():
+            error.configure(text='Insira apenas digitos')
+            return False
+        elif float(valor) <= 0:
+            error.configure(text='Insira Valores maiores que 0')
+            return False
+        else:
+            error.configure(text='')
+            return True
+
+
+
 
 
 def muda_modo(col):
@@ -176,8 +184,8 @@ def main():
     global voltas
     global dados
     global entrada_var
+    global error_label    
     
-    arquivosel = False
     bota = False
     dados = []
     voltas = []
@@ -207,7 +215,7 @@ def main():
 
     
     entrada_var = tk.StringVar()
-
+    arquivosel = tk.StringVar()
     # Imprime o tema atual
 
     # endregion
@@ -277,7 +285,7 @@ def main():
     selec.grid(row=0, column=1, sticky="new")
 
     # Selecionar o arquivo
-    montartabel = ttk.Button(selec, text='Montar Tabela', state= bota)
+    montartabel = ttk.Button(selec, text='Montar Tabela', command= lambda: atualizar_tabela(dados, tabela))
     montartabel.pack(pady=10, side='top', anchor='center')
     botao_selecionar_arquivo = ttk.Button(
         selec,
@@ -309,20 +317,22 @@ def main():
         side='top',
         anchor='center',
         after=botao_selecionar_arquivo)
+
+
     tamanhoasa = ttk.Label(selec, text="Insira o tamanho ( ͡° ͜ʖ ͡°)")
     tamanhoasa.pack(
         pady=10,
         side='top',
         anchor='center',
         after=botao_selecionar_arquivo)
-    insiratmn = ttk.Entry(selec, textvariable=entrada_var, validate="key")
-    insiratmn.configure(
-        validatecommand=(
-            janela.register(validar_numero(entrada_var, error_label)),
-            "%P"))
+    insiratmn = ttk.Entry(selec, validate= 'key', textvariable= entrada_var )
+    insiratmn.configure(validatecommand=(insiratmn.register(lambda value: pega_valor(value, insiratmn, error_label)), '%d', '%i', '%P'))
+    insiratmn.bind('<KeyRelease>', lambda event: pega_valor(event, insiratmn, error_label))
+ 
+    #error_label.configure(text= insiratmn.get())
+
 
     insiratmn.pack(pady=5, side='top', anchor='center', after=tamanhoasa)
-    insiratmn.bind("<<Modified>>",  entry_modified)
 
     # endregion
 
