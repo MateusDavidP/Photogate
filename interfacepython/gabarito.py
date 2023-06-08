@@ -5,8 +5,7 @@ from tkinter import filedialog, simpledialog
 import photogate as pt
 from altera_arquivo import alterar_wifi
 
-#variaveis
-
+# variaveis
 
 
 # region Janela de dialogo
@@ -20,7 +19,8 @@ def open_dialog(janela):
         x = opcao_selecionada.get()
         md = ['Onegate', 'Dualgate', 'Leitura']
         return md.index(x)
-    #region corpo do dialogo
+    # region corpo do dialogo
+
     class MyDialog(simpledialog.Dialog):
         def __init__(self, master):
             super().__init__(master)
@@ -53,7 +53,8 @@ def open_dialog(janela):
             self.label4 = ttk.Label(
                 master, text='Enter: Enviar | Esc: Cancelar')
             self.label4.grid(row=3)
-    #endregion
+    # endregion
+
         def apply(self):
             global arquivosel
             # Função chamada quando o botão de salvar é pressionado
@@ -68,9 +69,6 @@ def open_dialog(janela):
     dialog = MyDialog(janela)
 
 # endregion
-
-
-
 
 
 # Função para atualizar a tabela com os novos dados
@@ -119,7 +117,7 @@ def abrir_arquivos():
     arquivosel.set(filepaths)
     # !!! adionar função de pegar tmn
     try:
-        distancia =  float(entrada_var.get())
+        distancia = float(entrada_var.get())
     except ValueError:
         error_label.configure(text='Insira o tamanho')
         pass
@@ -129,8 +127,8 @@ def abrir_arquivos():
     dados = [
         {'Volta': x[0], 'Tempo':x[1], 'Acréscimo':x[3], 'Vel. Inst':x[4]} for x in calculado
     ]
-    
-    
+
+
 # endregion
 
 # region configurando cores alternadas na tabela
@@ -152,9 +150,6 @@ def pega_valor(event, entry: ttk.Entry, error: ttk.Label):
         else:
             error.configure(text='')
             return True
-
-
-
 
 
 def muda_modo(col):
@@ -184,8 +179,8 @@ def main():
     global voltas
     global dados
     global entrada_var
-    global error_label    
-    
+    global error_label
+
     bota = False
     dados = []
     voltas = []
@@ -213,7 +208,6 @@ def main():
     janela.rowconfigure(1, weight=1)
     janela.rowconfigure(2, weight=3)
 
-    
     entrada_var = tk.StringVar()
     arquivosel = tk.StringVar()
     # Imprime o tema atual
@@ -285,7 +279,12 @@ def main():
     selec.grid(row=0, column=1, sticky="new")
 
     # Selecionar o arquivo
-    montartabel = ttk.Button(selec, text='Montar Tabela', command= lambda: atualizar_tabela(dados, tabela))
+    montartabel = ttk.Button(
+        selec,
+        text='Montar Tabela',
+        command=lambda: atualizar_tabela(
+            dados,
+            tabela))
     montartabel.pack(pady=10, side='top', anchor='center')
     botao_selecionar_arquivo = ttk.Button(
         selec,
@@ -318,19 +317,31 @@ def main():
         anchor='center',
         after=botao_selecionar_arquivo)
 
-
     tamanhoasa = ttk.Label(selec, text="Insira o tamanho ( ͡° ͜ʖ ͡°)")
     tamanhoasa.pack(
         pady=10,
         side='top',
         anchor='center',
         after=botao_selecionar_arquivo)
-    insiratmn = ttk.Entry(selec, validate= 'key', textvariable= entrada_var )
-    insiratmn.configure(validatecommand=(insiratmn.register(lambda value: pega_valor(value, insiratmn, error_label)), '%d', '%i', '%P'))
-    insiratmn.bind('<KeyRelease>', lambda event: pega_valor(event, insiratmn, error_label))
- 
-    #error_label.configure(text= insiratmn.get())
+    insiratmn = ttk.Entry(selec, validate='key', textvariable=entrada_var)
+    insiratmn.configure(
+        validatecommand=(
+            insiratmn.register(
+                lambda value: pega_valor(
+                    value,
+                    insiratmn,
+                    error_label)),
+            '%d',
+            '%i',
+            '%P'))
+    insiratmn.bind(
+        '<KeyRelease>',
+        lambda event: pega_valor(
+            event,
+            insiratmn,
+            error_label))
 
+    # error_label.configure(text= insiratmn.get())
 
     insiratmn.pack(pady=5, side='top', anchor='center', after=tamanhoasa)
 
